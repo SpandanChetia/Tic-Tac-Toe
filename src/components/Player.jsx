@@ -5,7 +5,7 @@ export default function Player({name, symbol}){
     const [flag, setStatus] = useState(true);
 
     const playerEntry = ()=>{
-        setStatus(!flag);
+        setStatus((newFlag) => !newFlag);
     }
 
     const nameChange = (event)=>{
