@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-export default function Player({name, symbol}){
+export default function Player({name, symbol, active}){
     const [currname, handleNamechange] = useState(name);
     const [flag, setStatus] = useState(true);
 
@@ -24,7 +24,7 @@ export default function Player({name, symbol}){
 
     return(
         <>
-        <li>
+        <li className={active ? "active" : undefined}>
             <span className = "player">
                 {tabContent}
                 <span className = "player-symbol">{symbol}</span>
