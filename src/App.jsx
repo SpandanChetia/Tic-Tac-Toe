@@ -21,6 +21,11 @@ const startingGameBoard = [
 ];
 
 function App() {
+  const [players, changePlayers] = useState({
+    X : 'Player 1',
+    Y : 'Player 2'
+  });
+
   const [gameTurn, changeGameT] = useState([]);
   const activeP = getActivePlayer(gameTurn);
 
@@ -39,11 +44,12 @@ function App() {
     const tc = gameBoard[combo[2].row][combo[2].column];
 
     if(fc && fc===sc && fc===tc){
-      winner = fc;
+      winner = players[fc];
     }
   }
   
   let draw = gameTurn.length === 9 && !winner;
+
   const handleSelectSquare = (rowI, colI)=>{
     changeGameT(prevTurns=>{
       const currentP = getActivePlayer(prevTurns);
@@ -59,14 +65,23 @@ function App() {
 
   const handleRestart = ()=>{
     changeGameT([]);
-  }
+  };
+
+  const handlePlayerNameChange = (symbol, newName)=> {
+    changePlayers(prevPlayers =>{
+      return {
+        ...prevPlayers,
+        [symbol] : newName
+      };
+    });
+  };
 
   return (
     <main>
       <div id="game-container">
           <ol id="players" className="highlight-player">
-              <Player name = "Player 1" symbol = "X" active={activeP==="X"}/>
-              <Player name = "Player 2" symbol = "O" active={activeP==="O"}/>
+              <Player name = "Player 1" symbol = "X" active={activeP==="X"} onChange = {handlePlayerNameChange}/>
+              <Player name = "Player 2" symbol = "O" active={activeP==="O"} onChange = {handlePlayerNameChange}/>
           </ol>
           {(winner || draw) && <GameOver winner={winner} onRestart = {handleRestart}/>}
           <GameBoard onSelectSquare={handleSelectSquare}

@@ -1,11 +1,14 @@
 import {useState} from 'react';
 
-export default function Player({name, symbol, active}){
+export default function Player({name, symbol, active, onChange}){
     const [currname, handleNamechange] = useState(name);
     const [flag, setStatus] = useState(true);
 
     const playerEntry = ()=>{
         setStatus((newFlag) => !newFlag);
+        if(!flag){
+            onChange(symbol, currname);
+        }
     }
 
     const nameChange = (event)=>{
