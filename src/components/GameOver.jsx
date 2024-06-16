@@ -1,4 +1,4 @@
-export default function GameOver({winner}) {
+export default function GameOver({winner, onRestart}) {
     let result = null;
     if(winner){
         result = (
@@ -16,7 +16,7 @@ export default function GameOver({winner}) {
                 <h2>Game Over</h2>
                 {result}
                 <p>
-                    <button>Rematch!</button>
+                    <button onClick={onRestart}>Rematch!</button>
                 </p>
             </div>
         </>

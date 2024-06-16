@@ -24,7 +24,7 @@ function App() {
   const [gameTurn, changeGameT] = useState([]);
   const activeP = getActivePlayer(gameTurn);
 
-  let gameBoard = startingGameBoard;
+  let gameBoard = [...startingGameBoard.map(array=> [...array])];
   for(const turn of gameTurn){
     const { square, player } = turn;
     const { row, col } = square;
@@ -57,6 +57,10 @@ function App() {
     
   }
 
+  const handleRestart = ()=>{
+    changeGameT([]);
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -64,7 +68,7 @@ function App() {
               <Player name = "Player 1" symbol = "X" active={activeP==="X"}/>
               <Player name = "Player 2" symbol = "O" active={activeP==="O"}/>
           </ol>
-          {(winner || draw) && <GameOver winner={winner}/>}
+          {(winner || draw) && <GameOver winner={winner} onRestart = {handleRestart}/>}
           <GameBoard onSelectSquare={handleSelectSquare}
           board = {gameBoard}/>
       </div>
