@@ -3,20 +3,52 @@ import {useState} from 'react';
 import Player from './components/Player.jsx'
 import GameBoard from './components/GameBoard.jsx'
 import Log from './components/Log.jsx'
+import { WINNING_COMBINATIONS } from './winning-combos.js';
+
+const getActivePlayer = (gameTurn) =>{
+  let currentP = 'X';
+  if(gameTurn.length > 0 && gameTurn[0].player === 'X'){
+    currentP = 'O';
+  }
+  return currentP;
+}
+
+const startingGameBoard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
 
 function App() {
-  const [activeP, changeActive] = useState('X');
   const [gameTurn, changeGameT] = useState([]);
+  const activeP = getActivePlayer(gameTurn);
 
+  let gameBoard = startingGameBoard;
+  for(const turn of gameTurn){
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    gameBoard[row][col] = player;
+  }
+
+  let winner = null;
+  for(const combo of WINNING_COMBINATIONS){
+    const fc = gameBoard[combo[0].row][combo[0].column];
+    const sc = gameBoard[combo[1].row][combo[1].column];
+    const tc = gameBoard[combo[2].row][combo[2].column];
+
+    if(fc && fc===sc && fc===tc){
+      winner = fc;
+    }
+  }
+  
+  let winnerTab = undefined;
+  if(winner){
+    winnerTab = <p>Congrats {winner} won the Game!!</p>
+  }
   const handleSelectSquare = (rowI, colI)=>{
-    changeActive((newactive)=> newactive==='X' ? 'O' : 'X');
-
     changeGameT(prevTurns=>{
-      let currentP = 'X';
-
-      if(prevTurns.length>0 && prevTurns[0].player === 'X'){
-        currentP = 'O';
-      }
+      const currentP = getActivePlayer(prevTurns);
       const updatedTurns = [
         { square : { row : rowI, col : colI}, player : currentP },
          ...prevTurns
@@ -34,10 +66,11 @@ function App() {
               <Player name = "Player 1" symbol = "X" active={activeP==="X"}/>
               <Player name = "Player 2" symbol = "O" active={activeP==="O"}/>
           </ol>
+          {winnerTab}
           <GameBoard onSelectSquare={handleSelectSquare}
-          turns = {gameTurn}/>
+          board = {gameBoard}/>
       </div>
-      <Log/>
+      <Log turns={gameTurn}/>
     </main>
   )
 }
